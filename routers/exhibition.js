@@ -1,5 +1,5 @@
 const express = require("express");
-const Product = require("../models/product");
+const Exhibition = require("../models/exhibition");
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -24,52 +24,51 @@ const upload = multer({
 
 const router = new express.Router();
 
-// Post Painting Route
-router.post("/painting", upload.array("images"), async (req, res) => {
+// Post Exhibition Route
+router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
   const images = [];
-  // to get an image >> http://localhost:3000/image.png
-  // str.split("\\").pop()
+
   for (const image of req.files) {
     images.push(image.path);
   }
-  const painting = new Product({ ...req.body, images });
+  const painting = new Exhibition({ ...req.body, images });
   try {
     await painting.save();
-    res.status(201).send("Painting Added!");
+    res.status(201).send("Exhibition Added!");
   } catch (e) {
     res.status(400).send(e);
   }
 });
-// Get Paintings Route
-router.get("/paintings", async (req, res) => {
-  const products = await Product.find({})
-    .skip(Number(req.query.skip))
-    .limit(10);
-  if (products) {
-    res.status(200).send(products);
+
+// Get Exhibitions Route
+router.get("/exhibitions", async (req, res) => {
+  const exhibitions = await Exhibition.find({});
+
+  if (exhibitions) {
+    res.status(200).send(exhibitions);
   } else {
     res.status(400).send("not found");
   }
 });
 
-// Get Painting Route
-router.get("/painting/:id", async (req, res) => {
+// Get Exhibition Route
+router.get("/exhibition/:id", async (req, res) => {
   try {
-    const product = await Product.findOne({ _id: req.params.id });
-    if (product) {
-      const newProduct = {
-        title: product.title,
-        desc: product.desc,
-        price: product.price,
-        id: product._id,
+    const exhibition = await Exhibition.findOne({ _id: req.params.id });
+    if (exhibition) {
+      const newExhibition = {
+        title: exhibition.title,
+        desc: exhibition.desc,
+        price: exhibition.price,
+        id: exhibition._id,
         images: [],
       };
-      for (const image of product.images) {
-        newProduct.images.push({
+      for (const image of exhibition.images) {
+        newExhibition.images.push({
           url: `http://localhost:3000/${image.split("\\").pop()}`,
         });
       }
-      res.status(200).send(newProduct);
+      res.status(200).send(newExhibition);
     } else {
       res.status(400).send("not found");
     }
@@ -77,7 +76,5 @@ router.get("/painting/:id", async (req, res) => {
     res.status(400).send(e);
   }
 });
-
-// Get Collection
 
 module.exports = router;
