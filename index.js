@@ -4,7 +4,6 @@ const cors = require("cors");
 const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
-const mailRouter = require("./routers/mail");
 app.use(cors());
 app.use(express.static("uploads")); // serving images folder publicly
 app.use(express.json());
