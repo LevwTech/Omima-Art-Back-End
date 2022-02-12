@@ -79,5 +79,13 @@ router.get("/painting/:id", async (req, res) => {
 });
 
 // Get Collection
+router.get("/collection", async (req, res) => {
+  const products = await Product.find({ owner: req.query.owner });
+  if (products) {
+    res.status(200).send(products);
+  } else {
+    res.status(400).send("not found");
+  }
+});
 
 module.exports = router;
