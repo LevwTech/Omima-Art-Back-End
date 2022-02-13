@@ -8,8 +8,8 @@ const exhibitionRouter = require("./routers/exhibition");
 
 app.use(cors());
 process.env.PWD = process.cwd();
-// app.use(express.static("uploads")); // serving images folder publicly
-app.use(express.static(path.join(process.env.PWD, "public")));
+app.use(express.static("uploads")); // serving images folder publicly
+app.use(express.static(path.join(process.env.PWD, "uploads")));
 app.use(express.json());
 app.use(productRouter);
 app.use(exhibitionRouter);
