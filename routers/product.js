@@ -90,4 +90,14 @@ router.get("/collection", async (req, res) => {
   }
 });
 
+// Delete Painting
+router.get("/delete/:id", async (req, res) => {
+  try {
+    const painting = await Product.findByIdAndDelete(req.params.id);
+    res.status(200).send(`deleted`);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;
