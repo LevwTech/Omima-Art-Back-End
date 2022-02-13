@@ -4,8 +4,11 @@ const cors = require("cors");
 const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
+
 app.use(cors());
-app.use(express.static("uploads")); // serving images folder publicly
+process.env.PWD = process.cwd();
+// app.use(express.static("uploads")); // serving images folder publicly
+app.use(express.static(process.env.PWD + "/uploads"));
 app.use(express.json());
 app.use(productRouter);
 app.use(exhibitionRouter);
