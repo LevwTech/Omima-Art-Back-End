@@ -1,6 +1,7 @@
 require("./db/mongoose");
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
@@ -8,7 +9,7 @@ const exhibitionRouter = require("./routers/exhibition");
 app.use(cors());
 process.env.PWD = process.cwd();
 // app.use(express.static("uploads")); // serving images folder publicly
-app.use(express.static(process.env.PWD + "/uploads"));
+app.use(express.static(path.join(process.env.PWD, "uploads")));
 app.use(express.json());
 app.use(productRouter);
 app.use(exhibitionRouter);
