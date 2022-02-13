@@ -44,7 +44,9 @@ router.post("/painting", upload.array("images"), async (req, res) => {
 router.get("/paintings", async (req, res) => {
   const products = await Product.find({})
     .skip(Number(req.query.skip))
-    .limit(10);
+    .limit(10)
+    .sort({ createdAt: -1 });
+
   if (products) {
     res.status(200).send(products);
   } else {
