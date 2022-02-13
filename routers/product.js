@@ -68,7 +68,7 @@ router.get("/painting/:id", async (req, res) => {
       };
       for (const image of product.images) {
         newProduct.images.push({
-          url: `https://omimaart.herokuapp.com/${image.split("\\").pop()}`,
+          url: `https://omimaart.herokuapp.com/${image.split("/").pop()}`,
         });
       }
       res.status(200).send(newProduct);

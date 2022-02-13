@@ -65,7 +65,7 @@ router.get("/exhibition/:id", async (req, res) => {
       };
       for (const image of exhibition.images) {
         newExhibition.images.push({
-          url: `https://omimaart.herokuapp.com/${image.split("\\").pop()}`,
+          url: `https://omimaart.herokuapp.com/${image.split("/").pop()}`,
         });
       }
       res.status(200).send(newExhibition);
