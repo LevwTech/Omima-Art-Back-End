@@ -40,6 +40,7 @@ router.post("/painting", upload.array("images"), async (req, res) => {
     res.status(400).send(e);
   }
 });
+
 // Get Paintings Route
 router.get("/paintings", async (req, res) => {
   const products = await Product.find({})
