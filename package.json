@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Levvw/Omima-Art-Back-End#readme",
   "dependencies": {
     "@sendgrid/mail": "^7.6.1",
+    "aws-sdk": "^2.1076.0",
     "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
     "express": "^4.17.2",

@@ -1,6 +1,7 @@
 const express = require("express");
 const Product = require("../models/product");
 const multer = require("multer");
+const uploadFile = require("../utils/s3Upload");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -27,10 +28,14 @@ const router = new express.Router();
 // Post Painting Route
 router.post("/painting", upload.array("images"), async (req, res) => {
   const images = [];
-  // to get an image >> http://localhost:3000/image.png
-  // str.split("\\").pop()
+
   for (const image of req.files) {
-    images.push(image.path);
+    try {
+      const result = await uploadFile(image);
+      images.push(result.Location);
+    } catch (e) {
+      res.send(e);
+    }
   }
   const painting = new Product({ ...req.body, images });
   try {
@@ -69,7 +74,7 @@ router.get("/painting/:id", async (req, res) => {
       };
       for (const image of product.images) {
         newProduct.images.push({
-          url: `https://omimaart.herokuapp.com/${image.split("/").pop()}`,
+          url: image,
         });
       }
       res.status(200).send(newProduct);

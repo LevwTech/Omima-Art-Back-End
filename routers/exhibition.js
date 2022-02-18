@@ -1,6 +1,7 @@
 const express = require("express");
 const Exhibition = require("../models/exhibition");
 const multer = require("multer");
+const uploadFile = require("../utils/s3Upload");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -29,7 +30,12 @@ router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
   const images = [];
 
   for (const image of req.files) {
-    images.push(image.path);
+    try {
+      const result = await uploadFile(image);
+      images.push(result.Location);
+    } catch (e) {
+      res.send(e);
+    }
   }
   const painting = new Exhibition({ ...req.body, images });
   try {
@@ -65,7 +71,7 @@ router.get("/exhibition/:id", async (req, res) => {
       };
       for (const image of exhibition.images) {
         newExhibition.images.push({
-          url: `https://omimaart.herokuapp.com/${image.split("/").pop()}`,
+          url: image,
         });
       }
       res.status(200).send(newExhibition);
