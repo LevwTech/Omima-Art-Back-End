@@ -74,6 +74,7 @@ router.get("/exhibition/:id", async (req, res) => {
           url: image,
         });
       }
+
       res.status(200).send(newExhibition);
     } else {
       res.status(400).send("not found");
