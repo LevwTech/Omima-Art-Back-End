@@ -105,5 +105,15 @@ router.get("/delete/:id", async (req, res) => {
     res.status(400).send(e);
   }
 });
+router.get("/price/:id", async (req, res) => {
+  try {
+    const painting = await Product.findByIdAndUpdate(req.params.id, {
+      price: req.params.price,
+    });
+    res.status(200).send(`Price Changed!`);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
 module.exports = router;
