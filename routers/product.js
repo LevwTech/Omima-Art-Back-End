@@ -105,7 +105,7 @@ router.get("/delete/:id", async (req, res) => {
     res.status(400).send(e);
   }
 });
-router.get("/price/:id", async (req, res) => {
+router.get("/price/:id/:price", async (req, res) => {
   try {
     const painting = await Product.findByIdAndUpdate(req.params.id, {
       price: req.params.price,
