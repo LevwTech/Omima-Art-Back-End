@@ -105,10 +105,10 @@ router.get("/delete/:id", async (req, res) => {
     res.status(400).send(e);
   }
 });
-router.get("/price/:id/:price", async (req, res) => {
+router.get("/price/:id/:newPrice", async (req, res) => {
   try {
     const painting = await Product.findByIdAndUpdate(req.params.id, {
-      price: req.params.price,
+      price: req.params.newPrice,
     });
     res.status(200).send(`Price Changed!`);
   } catch (e) {
