@@ -116,13 +116,9 @@ router.get("/price/:id&:newPrice", async (req, res) => {
   }
 });
 
-router.post("/shippingfees", async (req, res) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
+router.post("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
-  if (req.body.country === "Egypt") newPrice = req.body.price + 100 / 15.75;
+  if (req.params.country === "Egypt") newPrice = req.params.price + 100 / 15.75;
   else newPrice = req.body.price + 3000 / 15.75;
   res.send({ newPrice });
 });
