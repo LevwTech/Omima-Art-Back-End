@@ -120,7 +120,7 @@ router.post("/shippingfees", async (req, res) => {
   let newPrice;
   if (req.body.country === "Egypt") newPrice = req.body.price + 100 / 15.75;
   else newPrice = req.body.price + 3000 / 15.75;
-  res.send(newPrice);
+  res.send({ newPrice });
 });
 
 module.exports = router;
