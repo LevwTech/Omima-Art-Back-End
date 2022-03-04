@@ -16,7 +16,7 @@ const upload = multer({
     fileSize: 1024 * 1024 * 100, // only accept till 100 mbs
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpe?g|png|gif|bmp)$/)) {
+    if (!file.originalname.match(/\.(jpe?g|png|PNG|JPG|JPEG|gif|bmp)$/)) {
       return cb(new Error("File must be an Image")); //
     }
     cb(undefined, true);
