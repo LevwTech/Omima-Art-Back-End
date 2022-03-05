@@ -26,8 +26,19 @@ const productSchema = new mongoose.Schema(
     owner: {
       type: String,
     },
+    done: {
+      type: Boolean,
+    },
+    userInfo: {
+      name: { type: String },
+      email: { type: String },
+      phone: { type: String },
+      country: { type: String },
+      city: { type: String },
+      adress: { type: String },
+    },
   },
-  { timestamps: true, toJSON: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true } } // adds createdAt and updatedAt fields
 );
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

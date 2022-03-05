@@ -124,4 +124,35 @@ router.get("/shippingfees/:price&:country", async (req, res) => {
   res.send({ newPrice: Math.round(newPrice) });
 });
 
+// getting orders from admin panel
+router.get("/orders", async (req, res) => {
+  const orders = await Product.find({ price: 0, done: false });
+  if (orders) {
+    res.status(200).send(orders);
+  } else {
+    res.status(400).send("not found");
+  }
+});
+
+// when mom clicks done on order
+router.get("/done/:id", async (req, res) => {
+  try {
+    const order = await Product.findByIdAndUpdate(req.params.id, {
+      done: true,
+    });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+// getting previous orders from admin panel
+router.get("/prevorders", async (req, res) => {
+  const orders = await Product.find({ done: true });
+  if (orders) {
+    res.status(200).send(orders);
+  } else {
+    res.status(400).send("not found");
+  }
+});
+
 module.exports = router;
