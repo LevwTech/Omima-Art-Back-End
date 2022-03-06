@@ -5,7 +5,6 @@ const path = require("path");
 const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
-
 app.use(cors());
 process.env.PWD = process.cwd();
 app.use(express.static("uploads")); // serving images folder publicly
