@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema(
     done: {
       type: Boolean,
       default: false,
+      required: true;
     },
     userInfo: {
       name: { type: String },
