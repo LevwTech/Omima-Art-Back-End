@@ -28,6 +28,7 @@ const productSchema = new mongoose.Schema(
     },
     done: {
       type: Boolean,
+      default: false,
     },
     userInfo: {
       name: { type: String },
