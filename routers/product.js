@@ -155,4 +155,8 @@ router.get("/prevorders", async (req, res) => {
   }
 });
 
+// payment route:  first api takes key (acc unique) gives token to be used in 2nd api
+// 2nd api gives id to be used in 3rd api as order_id along with also token
+// 3rd api takes integration_id (acc unique) and gives token to be used in iframe
+
 module.exports = router;
