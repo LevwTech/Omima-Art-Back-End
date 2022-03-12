@@ -147,7 +147,7 @@ router.get("/done/:id", async (req, res) => {
 
 // getting previous orders from admin panel
 router.get("/prevorders", async (req, res) => {
-  const orders = await Product.find({ done: true });
+  const orders = await Product.find({ done: true }).sort({ updatedAt: -1 });
   if (orders) {
     res.status(200).send(orders);
   } else {
