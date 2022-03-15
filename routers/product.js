@@ -3,6 +3,9 @@ const Product = require("../models/product");
 const multer = require("multer");
 const uploadFile = require("../utils/s3Upload");
 const axios = require("axios");
+const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
+const hmacSHA512 = require("crypto-js/hmac-sha512");
+const Base64 = require("crypto-js/enc-base64");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -213,6 +216,105 @@ router.post("/payment", async (req, res) => {
     obj3
   );
   res.send({ token: data3.data.token });
+});
+
+// callbacks
+
+router.get("/callback", async (req, res) => {
+  const HMACStringKeys = [
+    "amount_cents",
+    "created_at",
+    "currency",
+    "error_occured",
+    "has_parent_transaction",
+    "id",
+    "integration_id",
+    "is_3d_secure",
+    "is_auth",
+    "is_capture",
+    "is_refunded",
+    "is_standalone_payment",
+    "is_voided",
+    "order", // instead of order.id
+    "owner",
+    "pending",
+    "source_data.pan",
+    "source_data.sub_type",
+    "source_data.type",
+    "success",
+  ];
+  const hmmacArr = [];
+  HMACStringKeys.forEach((x) => hmmacArr.push(req.query[`${x}`]));
+  const hmacString = "".concat(...hmmacArr);
+  const hmacStringHashed = hmacSHA512(
+    hmacString,
+    process.env.PAYMOB_HMAC
+  ).toString();
+  const isHmacSecured = hmacStringHashed === req.query.hmac;
+  if (req.query.success === "true" && isHmacSecured)
+    res
+      .writeHead(301, {
+        Location: `${process.env.CLIENT_URL}/#/paymentsuccessful`,
+      })
+      .end();
+  else
+    res
+      .writeHead(301, {
+        Location: `${process.env.CLIENT_URL}/#/paymentfailed`,
+      })
+      .end();
+});
+router.post("/callback", async (req, res) => {
+  const hmacString = "".concat(
+    req.body.obj.amount_cents,
+    req.body.obj.created_at,
+    req.body.obj.currency,
+    req.body.obj.error_occured,
+    req.body.obj.has_parent_transaction,
+    req.body.obj.id,
+    req.body.obj.integration_id,
+    req.body.obj.is_3d_secure,
+    req.body.obj.is_auth,
+    req.body.obj.is_capture,
+    req.body.obj.is_refunded,
+    req.body.obj.is_standalone_payment,
+    req.body.obj.is_voided,
+    req.body.obj.order.id,
+    req.body.obj.owner,
+    req.body.obj.pending,
+    req.body.obj.source_data.pan,
+    req.body.obj.source_data.sub_type,
+    req.body.obj.source_data.type,
+    req.body.obj.success
+  );
+  const hmacStringHashed = hmacSHA512(
+    hmacString,
+    process.env.PAYMOB_HMAC
+  ).toString();
+  const isHmacSecured = hmacStringHashed === req.query.hmac;
+  if (req.body.obj.order && req.body.obj.success === "true" && isHmacSecured) {
+    const painting = await Product.findOneAndUpdate(
+      {
+        title: req.body.obj.order.items[0].name,
+      },
+      {
+        price: 0,
+        owner: req.body.obj.order.shipping_data.last_name,
+        userInfo: {
+          name: req.body.obj.order.shipping_data.first_name,
+          email: req.body.obj.order.shipping_data.email,
+          phone: req.body.obj.order.shipping_data.phone_number,
+          country: req.body.obj.order.shipping_data.country,
+          city: req.body.obj.order.shipping_data.city,
+          adress: req.body.obj.order.shipping_data.street,
+        },
+      }
+    );
+    sendNewOrderMail();
+    sendThankYouOrderMail(req.body.obj.order.shipping_data.email);
+  }
+
+  res.send();
 });
 
 module.exports = router;
