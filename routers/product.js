@@ -122,8 +122,8 @@ router.get("/price/:id&:newPrice", async (req, res) => {
 
 router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
-  if (req.params.country === "Egypt")
-    newPrice = Number(req.params.price) + Math.round(100 / 15.75);
+  if (req.params.country === "Egypt") newPrice = Number(req.params.price) + 0;
+  // newPrice = Number(req.params.price) + Math.round(100 / 15.75);
   else newPrice = Number(req.params.price) + Math.round(4000 / 15.75);
   res.send({ newPrice: Math.round(newPrice) });
 });
