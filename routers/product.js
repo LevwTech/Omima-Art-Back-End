@@ -122,8 +122,9 @@ router.get("/price/:id&:newPrice", async (req, res) => {
 
 router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
-  if (req.params.country === "Egypt") newPrice = Number(req.params.price) + 0;
-  // newPrice = Number(req.params.price) + Math.round(100 / 15.75);
+  if (req.params.country === "Egypt")
+    // newPrice = Number(req.params.price) + 0; // use for testing
+    newPrice = Number(req.params.price) + Math.round(100 / 15.75);
   else newPrice = Number(req.params.price) + Math.round(4000 / 15.75);
   res.send({ newPrice: Math.round(newPrice) });
 });
@@ -166,6 +167,7 @@ router.post("/payment", async (req, res) => {
   const data1 = await axios.post("https://accept.paymob.com/api/auth/tokens", {
     api_key: process.env.PAYMOB_API_KEY,
   });
+
   const token = data1.data.token;
 
   const obj2 = {
@@ -187,6 +189,7 @@ router.post("/payment", async (req, res) => {
     "https://accept.paymob.com/api/ecommerce/orders",
     obj2
   );
+
   const id = data2.data.id;
   const obj3 = {
     auth_token: token,
@@ -211,11 +214,18 @@ router.post("/payment", async (req, res) => {
     currency: "EGP",
     integration_id: process.env.PAYMOB_INTEGRATION_ID,
   };
-  const data3 = await axios.post(
-    "https://accept.paymob.com/api/acceptance/payment_keys",
-    obj3
-  );
-  res.send({ token: data3.data.token });
+
+  try {
+    const data3 = await axios.post(
+      "https://accept.paymob.com/api/acceptance/payment_keys",
+      obj3
+    );
+
+    res.send({ token: data3.data.token });
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
 });
 
 // callbacks
