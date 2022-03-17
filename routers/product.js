@@ -6,7 +6,6 @@ const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
 const Base64 = require("crypto-js/enc-base64");
-// CHANGE 100 TO req.body.items.price * 15.75 * 100
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -274,7 +273,7 @@ router.get("/callback", async (req, res) => {
       })
       .end();
 });
-router.post("/processedcallback", async (req, res) => {
+router.post("/callback", async (req, res) => {
   const hmacString = "".concat(
     req.body.obj.amount_cents,
     req.body.obj.created_at,
@@ -302,18 +301,7 @@ router.post("/processedcallback", async (req, res) => {
     process.env.PAYMOB_HMAC
   ).toString();
   const isHmacSecured = hmacStringHashed === req.query.hmac;
-  console.log(req.body.obj);
-  console.log("--------------------");
-  console.log(req.body.obj.order);
-  console.log("--------------------");
-  console.log(req.body.obj.success);
-  console.log("--------------------");
-  console.log(isHmacSecured);
-  console.log("--------------------");
-  console.log(
-    req.body.obj.order && req.body.obj.success === "true" && isHmacSecured
-  );
-  if (req.body.obj.order && req.body.obj.success === "true" && isHmacSecured) {
+  if (req.body.obj.order && req.body.obj.success === true && isHmacSecured) {
     const painting = await Product.findOneAndUpdate(
       {
         title: req.body.obj.order.items[0].name,
