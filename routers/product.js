@@ -6,7 +6,6 @@ const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
 const Base64 = require("crypto-js/enc-base64");
-// change 100 to req.body.items.price * 15.75 * 100 (TESTING WITH 1 EGP )
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -173,12 +172,12 @@ router.post("/payment", async (req, res) => {
   const obj2 = {
     auth_token: token,
     delivery_needed: "false",
-    amount_cents: String(100),
+    amount_cents: String(req.body.items.price * 15.75 * 100),
     currency: "EGP",
     items: [
       {
         name: req.body.items.title,
-        amount_cents: String(100),
+        amount_cents: String(req.body.items.price * 15.75 * 100),
         description: req.body.items.desc,
         quantity: "1",
       },
@@ -193,7 +192,7 @@ router.post("/payment", async (req, res) => {
   const id = data2.data.id;
   const obj3 = {
     auth_token: token,
-    amount_cents: String(100),
+    amount_cents: String(req.body.items.price * 15.75 * 100),
     expiration: 3600,
     order_id: id,
     billing_data: {
