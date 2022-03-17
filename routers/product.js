@@ -6,7 +6,7 @@ const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
 const Base64 = require("crypto-js/enc-base64");
-// change 100 to req.body.items.price * 15.75 * 100 (TESTING WITH 1 EGP)
+// change 100 to req.body.items.price * 15.75 * 100 (TESTING WITH 1 EGP )
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
