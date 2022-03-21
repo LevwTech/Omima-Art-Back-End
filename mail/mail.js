@@ -23,7 +23,7 @@ function sendThankYouOrderMail(email) {
     to: email, //  recipient
     from: "omimaaboelnasr@hotmail.com", // verified sender
     subject: "Thank you for Purchasing from Omima.art",
-    text: "Your painting will be shipped and delivered to you :)",
+    text: "Your painting will be shipped and delivered to you :) An email that includes the tracking number and other details will be sent to you shortly.",
   };
   sgMail
     .send(msg)
