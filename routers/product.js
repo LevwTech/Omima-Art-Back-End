@@ -364,4 +364,12 @@ router.post("/callback", async (req, res) => {
   res.send();
 });
 
+router.get("/usd", async (req, res) => {
+  axios
+    .get(
+      "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
+    )
+    .then((resdata) => res.send({ usd: resdata.data.rates.EGP }));
+});
+
 module.exports = router;
