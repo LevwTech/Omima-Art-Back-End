@@ -123,8 +123,8 @@ router.get("/price/:id&:newPrice", async (req, res) => {
 router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
   if (req.params.country === "Egypt")
-    newPrice = Number(req.params.price) + Math.round(100 / 18.22);
-  else newPrice = Number(req.params.price) + Math.round(4000 / 18.22);
+    newPrice = Number(req.params.price) + Math.round(100 / 18.5);
+  else newPrice = Number(req.params.price) + Math.round(4000 / 18.5);
   res.send({ newPrice: Math.round(newPrice) });
 });
 
@@ -172,12 +172,12 @@ router.post("/payment", async (req, res) => {
   const obj2 = {
     auth_token: token,
     delivery_needed: "false",
-    amount_cents: String(req.body.items.price * 18.22 * 100),
+    amount_cents: String(req.body.items.price * 18.5 * 100),
     currency: "EGP",
     items: [
       {
         name: req.body.items.title,
-        amount_cents: String(req.body.items.price * 18.22 * 100),
+        amount_cents: String(req.body.items.price * 18.5 * 100),
         description: req.body.items.desc,
         quantity: "1",
       },
@@ -192,7 +192,7 @@ router.post("/payment", async (req, res) => {
   const id = data2.data.id;
   const obj3 = {
     auth_token: token,
-    amount_cents: String(req.body.items.price * 18.22 * 100),
+    amount_cents: String(req.body.items.price * 18.5 * 100),
     expiration: 3600,
     order_id: id,
     billing_data: {
