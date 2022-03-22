@@ -122,29 +122,9 @@ router.get("/price/:id&:newPrice", async (req, res) => {
 
 router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
-  if (req.params.country === "Egypt") {
-    axios
-      .get(
-        "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
-      )
-      .then(
-        (res) =>
-          (newPrice =
-            Number(req.params.price) +
-            Math.round(100 / Number(res.data.rates.EGP)))
-      );
-  } else {
-    axios
-      .get(
-        "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
-      )
-      .then(
-        (res) =>
-          (newPrice =
-            Number(req.params.price) +
-            Math.round(4000 / Number(res.data.rates.EGP)))
-      );
-  }
+  if (req.params.country === "Egypt")
+    newPrice = Number(req.params.price) + Math.round(100 / 18.22);
+  else newPrice = Number(req.params.price) + Math.round(4000 / 18.22);
   res.send({ newPrice: Math.round(newPrice) });
 });
 
@@ -192,27 +172,17 @@ router.post("/payment", async (req, res) => {
   const obj2 = {
     auth_token: token,
     delivery_needed: "false",
+    amount_cents: String(req.body.items.price * 18.22 * 100),
     currency: "EGP",
     items: [
       {
         name: req.body.items.title,
+        amount_cents: String(req.body.items.price * 18.22 * 100),
         description: req.body.items.desc,
         quantity: "1",
       },
     ],
   };
-  axios
-    .get(
-      "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
-    )
-    .then((res) => {
-      obj2.amount_cents = String(
-        req.body.items.price * Number(res.data.rates.EGP) * 100
-      );
-      obj2.items[0].amount_cents = String(
-        req.body.items.price * Number(res.data.rates.EGP) * 100
-      );
-    });
 
   const data2 = await axios.post(
     "https://accept.paymob.com/api/ecommerce/orders",
@@ -222,6 +192,7 @@ router.post("/payment", async (req, res) => {
   const id = data2.data.id;
   const obj3 = {
     auth_token: token,
+    amount_cents: String(req.body.items.price * 18.22 * 100),
     expiration: 3600,
     order_id: id,
     billing_data: {
@@ -242,15 +213,6 @@ router.post("/payment", async (req, res) => {
     currency: "EGP",
     integration_id: process.env.PAYMOB_INTEGRATION_ID,
   };
-  axios
-    .get(
-      "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
-    )
-    .then((res) => {
-      obj3.amount_cents = String(
-        req.body.items.price * Number(res.data.rates.EGP) * 100
-      );
-    });
 
   try {
     const data3 = await axios.post(
@@ -363,13 +325,5 @@ router.post("/callback", async (req, res) => {
 
   res.send();
 });
-
-// router.get("/usd", async (req, res) => {
-//   axios
-//     .get(
-//       "https://openexchangerates.org/api/latest.json/?app_id=ecce751911ee41fa81a070ffab844866&base=USD"
-//     )
-//     .then((resdata) => res.send({ usd: resdata.data.rates.EGP }));
-// });
 
 module.exports = router;
