@@ -31,8 +31,8 @@ const router = new express.Router();
 
 // Post Painting Route
 router.post("/painting", upload.array("images"), async (req, res) => {
+  console.log(req.body);
   const images = [];
-
   for (const image of req.files) {
     try {
       const result = await uploadFile(image);
@@ -51,8 +51,49 @@ router.post("/painting", upload.array("images"), async (req, res) => {
 });
 
 // Get Paintings Route
-router.get("/paintings", async (req, res) => {
-  const products = await Product.find({})
+
+// Floral
+router.get("/floral", async (req, res) => {
+  const products = await Product.find({ category: "floral" })
+    .skip(Number(req.query.skip))
+    .limit(10)
+    .sort({ createdAt: -1 });
+
+  if (products) {
+    res.status(200).send(products);
+  } else {
+    res.status(400).send("not found");
+  }
+});
+// Landscape
+router.get("/landscape", async (req, res) => {
+  const products = await Product.find({ category: "landscape" })
+    .skip(Number(req.query.skip))
+    .limit(5)
+    .sort({ createdAt: -1 });
+
+  if (products) {
+    res.status(200).send(products);
+  } else {
+    res.status(400).send("not found");
+  }
+});
+// Abstract
+router.get("/abstract", async (req, res) => {
+  const products = await Product.find({ category: "abstract" })
+    .skip(Number(req.query.skip))
+    .limit(10)
+    .sort({ createdAt: -1 });
+
+  if (products) {
+    res.status(200).send(products);
+  } else {
+    res.status(400).send("not found");
+  }
+});
+// Paper
+router.get("/paper", async (req, res) => {
+  const products = await Product.find({ category: "paper" })
     .skip(Number(req.query.skip))
     .limit(10)
     .sort({ createdAt: -1 });
