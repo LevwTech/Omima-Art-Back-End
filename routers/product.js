@@ -69,7 +69,7 @@ router.get("/floral", async (req, res) => {
 router.get("/landscape", async (req, res) => {
   const products = await Product.find({ category: "landscape" })
     .skip(Number(req.query.skip))
-    .limit(5)
+    .limit(10)
     .sort({ createdAt: -1 });
 
   if (products) {
