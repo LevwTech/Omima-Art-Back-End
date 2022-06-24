@@ -150,6 +150,17 @@ router.get("/delete/:id", async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+// Make Painting Sold
+router.get("/sold/:id", async (req, res) => {
+  try {
+    const painting = await Product.findByIdAndUpdate(req.params.id,{price:0});
+    res.status(200).send(`Sold`);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 router.get("/price/:id&:newPrice", async (req, res) => {
   try {
     const painting = await Product.findByIdAndUpdate(req.params.id, {
