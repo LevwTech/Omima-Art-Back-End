@@ -6,6 +6,7 @@ const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
 const Base64 = require("crypto-js/enc-base64");
+const USD = 18.5;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -154,7 +155,9 @@ router.get("/delete/:id", async (req, res) => {
 // Make Painting Sold
 router.get("/sold/:id", async (req, res) => {
   try {
-    const painting = await Product.findByIdAndUpdate(req.params.id,{price:0});
+    const painting = await Product.findByIdAndUpdate(req.params.id, {
+      price: 0,
+    });
     res.status(200).send(`Sold`);
   } catch (e) {
     res.status(400).send(e);
@@ -244,7 +247,7 @@ router.post("/payment", async (req, res) => {
   const id = data2.data.id;
   const obj3 = {
     auth_token: token,
-    amount_cents: String(req.body.items.price * 18.9 * 100),
+    amount_cents: String(req.body.items.price * USD * 100),
     expiration: 3600,
     order_id: id,
     billing_data: {
