@@ -5,8 +5,7 @@ const path = require("path");
 const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
-app.use(cors({ origin: "https://omima.art" }));
-app.set("Access-Control-Allow-Origin", "https://omima.art");
+app.use(cors({ origin: "*" }));
 process.env.PWD = process.cwd();
 app.use(express.static("uploads")); // serving images folder publicly
 app.use(express.static(path.join(process.env.PWD, "uploads")));
