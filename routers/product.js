@@ -157,6 +157,16 @@ router.get("/sold/:id", async (req, res) => {
   try {
     const painting = await Product.findByIdAndUpdate(req.params.id, {
       price: 0,
+      owner: "google-oauth2|10671648352318424828",
+      userInfo: {
+        name: "Abdelrahman Mostafa",
+        email: "Abdelraahmanmostafa@gmail.com",
+        phone: "+2001145380005",
+        country: "Egypt",
+        city: "Sharm El Shiekh",
+        adress:
+          "Hay el Salam Building 13 Appart 6 Hay el Salam Building 13 Appart 6 Hay el Salam ",
+      },
     });
     res.status(200).send(`Sold`);
   } catch (e) {
