@@ -30,6 +30,7 @@
     "mongodb": "^4.3.1",
     "mongoose": "^6.2.1",
     "multer": "^1.4.4",
+    "node-cron": "^3.0.2",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
     "querystring": "^0.2.1"
