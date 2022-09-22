@@ -203,7 +203,7 @@ router.get("/price/:id&:newPrice&:password", async (req, res) => {
 router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
   if (req.params.country === "Egypt")
-    newPrice = Number(req.params.price) + Math.round(1 / USD);
+    newPrice = Number(req.params.price) + Math.round(100 / USD);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
   res.send({ newPrice: Math.round(newPrice) });
 });
