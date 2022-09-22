@@ -28,22 +28,26 @@ const router = new express.Router();
 
 // Post Exhibition Route
 router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
-  const images = [];
+  if (req.body.password === process.env.ADMIN_PW) {
+    const images = [];
 
-  for (const image of req.files) {
-    try {
-      const result = await uploadFile(image);
-      images.push(result.Location);
-    } catch (e) {
-      res.send(e);
+    for (const image of req.files) {
+      try {
+        const result = await uploadFile(image);
+        images.push(result.Location);
+      } catch (e) {
+        res.send(e);
+      }
     }
-  }
-  const painting = new Exhibition({ ...req.body, images });
-  try {
-    await painting.save();
-    res.status(201).send("Exhibition Added!");
-  } catch (e) {
-    res.status(400).send(e);
+    const painting = new Exhibition({ ...req.body, images });
+    try {
+      await painting.save();
+      res.status(201).send("Exhibition Added!");
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 
@@ -85,12 +89,16 @@ router.get("/exhibition/:id", async (req, res) => {
   }
 });
 // Delete Exhibition
-router.get("/Edelete/:id", async (req, res) => {
-  try {
-    const exhibition = await Exhibition.findByIdAndDelete(req.params.id);
-    res.status(200).send(`deleted`);
-  } catch (e) {
-    res.status(400).send(e);
+router.get("/Edelete/:id&:password", async (req, res) => {
+  if (req.params.password === process.env.ADMIN_PW) {
+    try {
+      const exhibition = await Exhibition.findByIdAndDelete(req.params.id);
+      res.status(200).send(`deleted`);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 

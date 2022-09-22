@@ -32,22 +32,25 @@ const router = new express.Router();
 
 // Post Painting Route
 router.post("/painting", upload.array("images"), async (req, res) => {
-  console.log(req.body);
-  const images = [];
-  for (const image of req.files) {
-    try {
-      const result = await uploadFile(image);
-      images.push(result.Location);
-    } catch (e) {
-      res.send(e);
+  if (req.body.password === process.env.ADMIN_PW) {
+    const images = [];
+    for (const image of req.files) {
+      try {
+        const result = await uploadFile(image);
+        images.push(result.Location);
+      } catch (e) {
+        res.send(e);
+      }
     }
-  }
-  const painting = new Product({ ...req.body, images });
-  try {
-    await painting.save();
-    res.status(201).send("Painting Added!");
-  } catch (e) {
-    res.status(400).send(e);
+    const painting = new Product({ ...req.body, images });
+    try {
+      await painting.save();
+      res.status(201).send("Painting Added!");
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 
@@ -143,45 +146,57 @@ router.get("/collection", async (req, res) => {
 });
 
 // Delete Painting
-router.get("/delete/:id", async (req, res) => {
-  try {
-    const painting = await Product.findByIdAndDelete(req.params.id);
-    res.status(200).send(`deleted`);
-  } catch (e) {
-    res.status(400).send(e);
+router.get("/delete/:id&:password", async (req, res) => {
+  if (req.params.password === process.env.ADMIN_PW) {
+    try {
+      const painting = await Product.findByIdAndDelete(req.params.id);
+      res.status(200).send(`deleted`);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 
 // Make Painting Sold
-router.get("/sold/:id", async (req, res) => {
-  try {
-    const painting = await Product.findByIdAndUpdate(req.params.id, {
-      price: 0,
-      owner: "google-oauth2|10671648352318424828",
-      userInfo: {
-        name: "Abdelrahman Mostafa",
-        email: "Abdelraahmanmostafa@gmail.com",
-        phone: "+2001145380005",
-        country: "Egypt",
-        city: "Sharm El Shiekh",
-        adress:
-          "Hay el Salam Building 13 Appart 6 Hay el Salam Building 13 Appart 6 Hay el Salam ",
-      },
-    });
-    res.status(200).send(`Sold`);
-  } catch (e) {
-    res.status(400).send(e);
+router.get("/sold/:id&:password", async (req, res) => {
+  if (req.params.password === process.env.ADMIN_PW) {
+    try {
+      const painting = await Product.findByIdAndUpdate(req.params.id, {
+        price: 0,
+        owner: "google-oauth2|10671648352318424828",
+        userInfo: {
+          name: "Abdelrahman Mostafa",
+          email: "Abdelraahmanmostafa@gmail.com",
+          phone: "+2001145380005",
+          country: "Egypt",
+          city: "Sharm El Shiekh",
+          adress:
+            "Hay el Salam Building 13 Appart 6 Hay el Salam Building 13 Appart 6 Hay el Salam ",
+        },
+      });
+      res.status(200).send(`Sold`);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 
-router.get("/price/:id&:newPrice", async (req, res) => {
-  try {
-    const painting = await Product.findByIdAndUpdate(req.params.id, {
-      price: req.params.newPrice,
-    });
-    res.status(200).send(`Price Changed!`);
-  } catch (e) {
-    res.status(400).send(e);
+router.get("/price/:id&:newPrice&:password", async (req, res) => {
+  if (req.params.password === process.env.ADMIN_PW) {
+    try {
+      const painting = await Product.findByIdAndUpdate(req.params.id, {
+        price: req.params.newPrice,
+      });
+      res.status(200).send(`Price Changed!`);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else {
+    res.status(400).send("Incorrect Password");
   }
 });
 
