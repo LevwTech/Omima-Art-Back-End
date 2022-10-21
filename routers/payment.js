@@ -56,7 +56,7 @@ router.post("/payment", async (req, res) => {
       postal_code: "NA",
       city: req.body.shipping.city,
       country: req.body.shipping.country,
-      last_name: req.body.user.sub,
+      last_name: req.body.user.sub, // saving the owner (sub) in the last_name field while the first_name holds the full name
       state: "NA",
     },
     currency: "EGP",
