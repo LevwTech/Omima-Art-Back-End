@@ -54,48 +54,8 @@ router.post("/painting", upload.array("images"), async (req, res) => {
 
 // Get Paintings Route
 
-// Floral
-router.get("/floral", async (req, res) => {
-  const products = await Product.find({ category: "floral" })
-    .skip(Number(req.query.skip))
-    .limit(10)
-    .sort({ createdAt: -1 });
-
-  if (products) {
-    res.status(200).send(products);
-  } else {
-    res.status(400).send("not found");
-  }
-});
-// Landscape
-router.get("/landscape", async (req, res) => {
-  const products = await Product.find({ category: "landscape" })
-    .skip(Number(req.query.skip))
-    .limit(10)
-    .sort({ createdAt: -1 });
-
-  if (products) {
-    res.status(200).send(products);
-  } else {
-    res.status(400).send("not found");
-  }
-});
-// Abstract
-router.get("/abstract", async (req, res) => {
-  const products = await Product.find({ category: "abstract" })
-    .skip(Number(req.query.skip))
-    .limit(10)
-    .sort({ createdAt: -1 });
-
-  if (products) {
-    res.status(200).send(products);
-  } else {
-    res.status(400).send("not found");
-  }
-});
-// Paper
-router.get("/paper", async (req, res) => {
-  const products = await Product.find({ category: "paper" })
+router.get("/category/:category", async (req, res) => {
+  const products = await Product.find({ category: req.params.category })
     .skip(Number(req.query.skip))
     .limit(10)
     .sort({ createdAt: -1 });
