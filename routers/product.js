@@ -2,7 +2,7 @@ const express = require("express");
 const Product = require("../models/product");
 const multer = require("multer");
 const uploadFile = require("../utils/s3Upload");
-const { usd } = require("./usd.json");
+const { usd } = require("../utils/usd.json");
 const USD = Number(usd);
 
 const storage = multer.diskStorage({
@@ -156,14 +156,6 @@ router.get("/price/:id&:newPrice&:password", async (req, res) => {
   } else {
     res.status(400).send("Incorrect Password");
   }
-});
-
-router.get("/shippingfees/:price&:country", async (req, res) => {
-  let newPrice;
-  if (req.params.country === "Egypt")
-    newPrice = Number(req.params.price) + Math.round(100 / USD);
-  else newPrice = Number(req.params.price) + Math.round(4000 / USD);
-  res.send({ newPrice: Math.round(newPrice) });
 });
 
 // getting orders from admin panel
