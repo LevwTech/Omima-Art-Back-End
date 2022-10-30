@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const currencyApiKey = process.env.CURRENCY_API_KEY;
 const getEGPToUSD = async () => {
-  console.log("1 minute has passed..");
   try {
     const result = await axios.get(
       `https://api.apilayer.com/currency_data/convert?to=EGP&from=USD&amount=1&apikey=${currencyApiKey}`
