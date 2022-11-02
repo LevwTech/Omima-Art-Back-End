@@ -3,8 +3,7 @@ const Product = require("../models/product");
 const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
-const { usd } = require("../utils/usd.json");
-const USD = Number(usd);
+const { getUSD } = require("../utils/currency");
 
 // payment route:  first api takes key (acc unique) gives token to be used in 2nd api
 // 2nd api gives id to be used in 3rd api as order_id along with also token
@@ -13,6 +12,7 @@ const USD = Number(usd);
 const router = new express.Router();
 
 router.post("/payment", async (req, res) => {
+  const USD = await getUSD();
   const data1 = await axios.post("https://accept.paymob.com/api/auth/tokens", {
     api_key: process.env.PAYMOB_API_KEY,
   });
@@ -177,12 +177,12 @@ router.post("/callback", async (req, res) => {
 });
 
 router.get("/shippingfees/:price&:country", async (req, res) => {
-  const jsonUSDData = require("../utils/usd.json");
+  const USD = await getUSD();
   let newPrice;
   if (req.params.country === "Egypt")
     newPrice = Number(req.params.price) + Math.round(100 / USD);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
-  res.send({ newPrice: Math.round(newPrice), usd: jsonUSDData.usd });
+  res.send({ newPrice: Math.round(newPrice), usd: USD });
 });
 
 module.exports = router;

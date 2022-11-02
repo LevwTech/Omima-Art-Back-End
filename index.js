@@ -8,7 +8,7 @@ const app = express();
 const productRouter = require("./routers/product");
 const exhibitionRouter = require("./routers/exhibition");
 const paymentRouter = require("./routers/payment");
-const getEGPToUSD = require("./utils/currency");
+const { getEGPToUSD } = require("./utils/currency");
 app.use(cors({ origin: "*" }));
 process.env.PWD = process.cwd();
 app.use(express.static("uploads")); // serving images folder publicly

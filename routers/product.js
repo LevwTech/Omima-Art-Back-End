@@ -2,8 +2,6 @@ const express = require("express");
 const Product = require("../models/product");
 const multer = require("multer");
 const uploadFile = require("../utils/s3Upload");
-const { usd } = require("../utils/usd.json");
-const USD = Number(usd);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
