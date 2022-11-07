@@ -1,28 +1,6 @@
 const express = require("express");
 const Exhibition = require("../models/exhibition");
-const multer = require("multer");
-const uploadFile = require("../utils/s3Upload");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 100, // only accept till 100 mbs
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpe?g|png|PNG|JPG|JPEG|gif|bmp)$/)) {
-      return cb(new Error("File must be an Image")); //
-    }
-    cb(undefined, true);
-  },
-});
+const upload = require("../utils/uploadS3");
 
 const router = new express.Router();
 
@@ -30,14 +8,8 @@ const router = new express.Router();
 router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
   if (req.body.password === process.env.ADMIN_PW) {
     const images = [];
-
     for (const image of req.files) {
-      try {
-        const result = await uploadFile(image);
-        images.push(result.Location);
-      } catch (e) {
-        res.send(e);
-      }
+      images.push(`https://omima-art-images.s3.amazonaws.com/${image.key}`);
     }
     const painting = new Exhibition({ ...req.body, images });
     try {
