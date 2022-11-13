@@ -32,7 +32,13 @@ router.get("/exhibitions", async (req, res) => {
       exhibiton.desc =
         exhibiton.desc.split("").slice(0, maxChars).join("") + "...";
     });
-    res.status(200).send(exhibitions);
+    res
+
+      .skip(Number(req.query.skip))
+      .limit(10)
+      .sort({ createdAt: -1 })
+      .status(200)
+      .send(exhibitions);
   } else {
     res.status(400).send("not found");
   }
