@@ -25,20 +25,17 @@ router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
 
 // Get Exhibitions Route
 router.get("/exhibitions", async (req, res) => {
-  const exhibitions = await Exhibition.find({});
+  const exhibitions = await Exhibition.find({})
+    .skip(Number(req.query.skip))
+    .limit(10)
+    .sort({ createdAt: -1 });
   const maxChars = 100;
   if (exhibitions) {
     exhibitions.forEach((exhibiton) => {
       exhibiton.desc =
         exhibiton.desc.split("").slice(0, maxChars).join("") + "...";
     });
-    res
-
-      .skip(Number(req.query.skip))
-      .limit(10)
-      .sort({ createdAt: -1 })
-      .status(200)
-      .send(exhibitions);
+    res.status(200).send(exhibitions);
   } else {
     res.status(400).send("not found");
   }
