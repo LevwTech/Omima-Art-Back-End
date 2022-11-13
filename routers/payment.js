@@ -4,6 +4,7 @@ const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
 const { getUSD } = require("../utils/currency");
+const Usd = require("../models/usd");
 
 // payment route:  first api takes key (acc unique) gives token to be used in 2nd api
 // 2nd api gives id to be used in 3rd api as order_id along with also token
@@ -183,6 +184,13 @@ router.get("/shippingfees/:price&:country", async (req, res) => {
     newPrice = Number(req.params.price) + Math.round(100 / USD);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
   res.send({ newPrice: Math.round(newPrice), usd: USD });
+});
+
+// remove on buying a new hosting droplet
+router.get("/boot", async (req, res) => {
+  console.log("Server & DB Waking Up..");
+  const painting = await Product.findOne({});
+  res.send();
 });
 
 module.exports = router;
