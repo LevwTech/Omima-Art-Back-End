@@ -35,7 +35,7 @@ function sendThankYouOrderMail(email) {
     });
 }
 
-function sendActiveMail() {
+async function sendActiveMail() {
   const msg = {
     to: "leevvw@gmail.com", //  recipient
     from: "levwtech@gmail.com", // verified sender

@@ -3,7 +3,8 @@ const Product = require("../models/product");
 const axios = require("axios");
 const { sendNewOrderMail, sendThankYouOrderMail } = require("../mail/mail.js");
 const hmacSHA512 = require("crypto-js/hmac-sha512");
-const { getUSD } = require("../utils/currency");
+const { getUSD, getEGPToUSD } = require("../utils/currency");
+const { sendActiveMail } = require("../mail/mail.js");
 const Usd = require("../models/usd");
 
 // payment route:  first api takes key (acc unique) gives token to be used in 2nd api
@@ -190,6 +191,15 @@ router.get("/shippingfees/:price&:country", async (req, res) => {
 router.get("/boot", async (req, res) => {
   console.log("Server & DB Waking Up..");
   const painting = await Product.findOne({});
+  res.send();
+});
+
+router.post("/updateUSD", async (req, res) => {
+  await getEGPToUSD();
+  res.send();
+});
+router.post("/keepSendgridActive", async (req, res) => {
+  await sendActiveMail();
   res.send();
 });
 
