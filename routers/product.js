@@ -95,7 +95,7 @@ router.get("/sold/:id&:password", async (req, res) => {
     try {
       const painting = await Product.findByIdAndUpdate(req.params.id, {
         price: 0,
-        owner: "google-oauth2|10671648352318424828",
+        owner: "google-oauth2|106716483523184248288",
         userInfo: {
           name: "Abdelrahman Mostafa",
           email: "Abdelraahmanmostafa@gmail.com",
