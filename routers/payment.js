@@ -182,7 +182,8 @@ router.get("/shippingfees/:price&:country", async (req, res) => {
   const USD = await getUSD();
   let newPrice;
   if (req.params.country === "Egypt")
-    newPrice = Number(req.params.price) + Math.round(100 / USD);
+    // newPrice = Number(req.params.price) + Math.round(100 / USD);
+    newPrice = Number(req.params.price);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
   res.send({ newPrice: Math.round(newPrice), usd: USD });
 });
