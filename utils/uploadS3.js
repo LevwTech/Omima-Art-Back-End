@@ -15,13 +15,16 @@ const s3 = new S3Client({
   },
 });
 
+const maxFileSize = 30 * 1024 * 1024;
+
 const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: bucketName,
+    multipartUploadThreshold: 31457280, // 30MB
     fileFilter(req, file, cb) {
       if (!file.originalname.match(/\.(jpe?g|png|PNG|JPG|JPEG|gif|bmp)$/)) {
-        return cb(new Error("File must be an Image")); //
+        return cb(new Error("File must be an Image"));
       }
       cb(undefined, true);
     },
@@ -29,6 +32,7 @@ const upload = multer({
       cb(null, Date.now() + file.originalname.replace(/ /g, ""));
     },
   }),
+  limits: { fileSize: maxFileSize },
 });
 
 module.exports = upload;

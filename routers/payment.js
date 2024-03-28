@@ -183,6 +183,7 @@ router.get("/shippingfees/:price&:country", async (req, res) => {
   let newPrice;
   if (req.params.country === process.env.ARTIST_COUNTRY)
     newPrice = Number(req.params.price) + Math.round(100 / USD);
+    // newPrice = Number(req.params.price);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
   res.send({ newPrice: Math.round(newPrice), usd: USD });
 });

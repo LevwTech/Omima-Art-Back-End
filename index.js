@@ -11,9 +11,10 @@ const { getEGPToUSD } = require("./utils/currency");
 const { sendActiveMail } = require("./mail/mail.js");
 app.use(cors({ origin: "*" }));
 process.env.PWD = process.cwd();
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.use(express.static("uploads")); // serving images folder publicly
 app.use(express.static(path.join(process.env.PWD, "uploads")));
-app.use(express.json());
 app.use(productRouter);
 app.use(exhibitionRouter);
 app.use(paymentRouter);
