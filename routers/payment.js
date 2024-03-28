@@ -181,7 +181,7 @@ router.post("/callback", async (req, res) => {
 router.get("/shippingfees/:price&:country", async (req, res) => {
   const USD = await getUSD();
   let newPrice;
-  if (req.params.country === "Egypt")
+  if (req.params.country === process.env.ARTIST_COUNTRY)
     newPrice = Number(req.params.price) + Math.round(100 / USD);
   else newPrice = Number(req.params.price) + Math.round(4000 / USD);
   res.send({ newPrice: Math.round(newPrice), usd: USD });

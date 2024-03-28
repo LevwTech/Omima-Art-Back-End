@@ -9,7 +9,7 @@ router.post("/painting", upload.array("images"), async (req, res) => {
   if (req.body.password === process.env.ADMIN_PW) {
     const images = [];
     for (const image of req.files) {
-      images.push(`https://omima-art-images.s3.amazonaws.com/${image.key}`);
+      images.push(`https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${image.key}`);
     }
     const painting = new Product({ ...req.body, images });
 
@@ -67,7 +67,9 @@ router.get("/painting/:id", async (req, res) => {
 
 // Get  Collection
 router.get("/collection", async (req, res) => {
-  const products = await Product.find({ owner: req.query.owner });
+  const products = await Product.find({
+    owner: req.query.owner,
+  });
   if (products) {
     res.status(200).send(products);
   } else {
@@ -95,15 +97,14 @@ router.get("/sold/:id&:password", async (req, res) => {
     try {
       const painting = await Product.findByIdAndUpdate(req.params.id, {
         price: 0,
-        owner: "google-oauth2|10671648352318424828",
+        owner: process.env.ARTIST_ID,
         userInfo: {
-          name: "Abdelrahman Mostafa",
-          email: "Abdelraahmanmostafa@gmail.com",
-          phone: "+2001145380005",
-          country: "Egypt",
-          city: "Sharm El Shiekh",
-          adress:
-            "Hay el Salam Building 13 Appart 6 Hay el Salam Building 13 Appart 6 Hay el Salam ",
+          name: "Made Sold",
+          email: "Made Sold",
+          phone: "Made Sold",
+          country: "Made Sold",
+          city: "Made Sold",
+          adress: "Made Sold",
         },
       });
       res.status(200).send(`Sold`);
@@ -140,7 +141,7 @@ router.get("/orders", async (req, res) => {
   }
 });
 
-// when mom clicks done on order
+// when artist clicks done on order
 router.get("/done/:id", async (req, res) => {
   try {
     const order = await Product.findByIdAndUpdate(req.params.id, {

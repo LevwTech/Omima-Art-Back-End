@@ -9,7 +9,7 @@ router.post("/exhibition", upload.array("exhibitions"), async (req, res) => {
   if (req.body.password === process.env.ADMIN_PW) {
     const images = [];
     for (const image of req.files) {
-      images.push(`https://omima-art-images.s3.amazonaws.com/${image.key}`);
+      images.push(`https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${image.key}`);
     }
     const painting = new Exhibition({ ...req.body, images });
     try {

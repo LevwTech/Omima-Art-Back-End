@@ -4,15 +4,15 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 function sendNewOrderMail() {
   const msg = {
-    to: "omimaaboelnasr@hotmail.com", // Change to your recipient
-    from: "levwtech@gmail.com", // Change to your verified sender
-    subject: "New Order Omima Art",
+    to: process.env.ARTIST_EMAIL,
+    from: process.env.SENDGRID_VERIFIED_SENDER,
+    subject: `New Order ${process.env.ARTIST_FIRST_NAME} Art`,
     text: "New Painting has been purchased! check (Admin > New Orders) for User and Shipping Info",
   };
   sgMail
     .send(msg)
     .then(() => {
-      console.log("Email sent");
+      console.log("Email Sent");
     })
     .catch((error) => {
       console.error(error);
@@ -21,9 +21,9 @@ function sendNewOrderMail() {
 function sendThankYouOrderMail(email) {
   const msg = {
     to: email, //  recipient
-    from: "omimaaboelnasr@hotmail.com", // verified sender
-    subject: "Thank you for Purchasing from Omima.art",
-    text: "Your painting will be shipped and delivered to you :) An email that includes the tracking number and other details will be sent to you shortly.",
+    from: process.env.ARTIST_EMAIL, // verified sender
+    subject: `Thank you for Purchasing from ${process.env.ARTIST_FIRST_NAME} Art Gallery`,
+    text: "Your painting will be shipped and delivered to you. An email that includes the tracking number and other details will be sent to you shortly.",
   };
   sgMail
     .send(msg)
@@ -37,15 +37,15 @@ function sendThankYouOrderMail(email) {
 
 async function sendActiveMail() {
   const msg = {
-    to: "leevvw@gmail.com", //  recipient
-    from: "levwtech@gmail.com", // verified sender
+    to: "leevvw@gmail.com", //  Any Email
+    from: process.env.SENDGRID_VERIFIED_SENDER,
     subject: "This is to keep SendGrid Active",
     text: "Ignore this email",
   };
   sgMail
     .send(msg)
     .then(() => {
-      console.log("Email sent");
+      console.log("Email Sent");
     })
     .catch((error) => {
       console.error(error);
@@ -53,4 +53,3 @@ async function sendActiveMail() {
 }
 
 module.exports = { sendNewOrderMail, sendThankYouOrderMail, sendActiveMail };
-// import as: const { sendNewOrderMail, sendThankYouOrderMail } = require("./mail/mail.js");
