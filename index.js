@@ -14,6 +14,8 @@ process.env.PWD = process.cwd();
 app.use(express.static("uploads")); // serving images folder publicly
 app.use(express.static(path.join(process.env.PWD, "uploads")));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '30mb' }));
+app.use(express.json({limit:'30mb'})); 
 app.use(productRouter);
 app.use(exhibitionRouter);
 app.use(paymentRouter);
