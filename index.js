@@ -1,5 +1,6 @@
 require("./db/mongoose");
 const express = require("express");
+const bodyParser = require('body-parser');
 const cors = require("cors");
 const path = require("path");
 const cron = require("node-cron");
@@ -11,8 +12,8 @@ const { getEGPToUSD } = require("./utils/currency");
 const { sendActiveMail } = require("./mail/mail.js");
 app.use(cors({ origin: "*" }));
 process.env.PWD = process.cwd();
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static("uploads")); // serving images folder publicly
 app.use(express.static(path.join(process.env.PWD, "uploads")));
 app.use(productRouter);
